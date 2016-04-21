@@ -70,6 +70,9 @@ public class Cella {
 		return true;
 	}
 	
+	public String toString(){
+		return /*riga+"-"+col+":"+*/valore+"";
+	}
 	
 	
 	

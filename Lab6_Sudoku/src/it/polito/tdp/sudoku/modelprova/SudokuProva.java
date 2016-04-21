@@ -8,12 +8,13 @@ public class SudokuProva {
 
 	private List<Cella> solParziale;
 	
-	public void SudokuProva(){
-		
+	public SudokuProva(){
+	
 		solParziale=new ArrayList<Cella>();
 		for(int i=1;i<=9; i++){
 			for(int j=1;j<=9;j++){
-				solParziale.add(new Cella(i,j));
+				Cella c=new Cella(i,j);
+				solParziale.add(c);
 			}
 		}
 	}
@@ -21,26 +22,29 @@ public class SudokuProva {
 	public List<Cella> trova(){
 		
 		//solParziale.clear();
+		for(int j=1;j<=9;j++)
+			ricorsione(j);
 		
-		ricorsione(0);
 		
 		return solParziale;
 	}
 	
 	private boolean ricorsione(int livello){
-		
+
 		if(livello==10){
 			return true;
 		}
-		for(int val=1;val<=9;val++){
-			for(int col=1;col<=9;col++){
+		for(int col=1;col<=9;col++){
+			for(int val=1;val<=9;val++){
 				if(filtro(livello,col,solParziale,val)==true){
-					solParziale.add(new Cella(livello,col,val));
+					int p=solParziale.indexOf(new Cella(livello,col));
+					solParziale.get(p).setValore(val);
+					
 					boolean b=ricorsione(livello+1);
-					if(b==true){
+					if(b==true)
 						return true;
-					}
-					solParziale.remove(new Cella(livello,col,val));
+					
+					solParziale.get(p).setValore(0);
 				}
 			}
 		}
@@ -55,8 +59,8 @@ public class SudokuProva {
 		if(livello<=3){
 			//PRIMO QUADRATO
 			if(col<=3){
-				for(int i=0;i<=3;i++){
-					for(int j=0;j<=3;j++){
+				for(int i=1;i<=3;i++){
+					for(int j=1;j<=3;j++){
 						if(livello!=i && col!=j){
 							int p=solParziale.indexOf(new Cella(i,j));
 							if(solParziale.get(p).getValore()==val)
@@ -67,7 +71,7 @@ public class SudokuProva {
 			}
 			//TERZO QUADRATO
 			if(col>=7){
-				for(int i=0;i<=3;i++){
+				for(int i=1;i<=3;i++){
 					for(int j=7;j<=9;j++){
 						if(livello!=i && col!=j){
 							int p=solParziale.indexOf(new Cella(i,j));
@@ -78,7 +82,7 @@ public class SudokuProva {
 				}
 			}else{
 				//SECONDO QUADRATO
-				for(int i=0;i<=3;i++){
+				for(int i=1;i<=3;i++){
 					for(int j=4;j<=6;j++){
 						if(livello!=i && col!=j){
 							int p=solParziale.indexOf(new Cella(i,j));
@@ -94,7 +98,7 @@ public class SudokuProva {
 			//PRIMO QUADRATO
 			if(col<=3){
 				for(int i=7;i<=9;i++){
-					for(int j=0;j<=3;j++){
+					for(int j=1;j<=3;j++){
 						if(livello!=i && col!=j){
 							int p=solParziale.indexOf(new Cella(i,j));
 							if(solParziale.get(p).getValore()==val)
@@ -131,7 +135,7 @@ public class SudokuProva {
 			
 			if(col<=3){
 				for(int i=4;i<=6;i++){
-					for(int j=0;j<=3;j++){
+					for(int j=1;j<=3;j++){
 						if(livello!=i && col!=j){
 							int p=solParziale.indexOf(new Cella(i,j));
 							if(solParziale.get(p).getValore()==val)
@@ -192,7 +196,7 @@ public class SudokuProva {
 			
 		//CONTROLLO COLONNA
 		for(int i=1;i<=9;i++){
-			if(i!=col){
+			if(i!=livello){
 				int p=solParziale.indexOf(new Cella(i,col));
 				if(solParziale.get(p).getValore()==val){
 					return false;
@@ -210,9 +214,15 @@ public class SudokuProva {
 	
 	
 	public static void main(String[] args) {
-	SudokuProva sp=new SudokuProva();
-	List<Cella> l=sp.trova();
-	System.out.println(l);
+		SudokuProva sp=new SudokuProva();
+		List<Cella> l=sp.trova();
+		
+		for(int i=0;i<81;i++){
+			if(i==9 || i==18 || i==27 || i==36 || i==45 || i==54 || i==63 || i==72)
+				System.out.print("\n");
+			System.out.print(l.get(i)+" ");
+		}
+		
 		
 		
 	}
