@@ -1,61 +1,73 @@
 package it.polito.tdp.sudoku.modelprova;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SudokuProva {
 
 
-	private List<Cella> solParziale;
+	private Map<Cella,Integer> solParziale;
+	private int conta=0;
+
 	
 	public SudokuProva(){
 	
-		solParziale=new ArrayList<Cella>();
+		solParziale=new HashMap<Cella,Integer>();
 		for(int i=1;i<=9; i++){
 			for(int j=1;j<=9;j++){
 				Cella c=new Cella(i,j);
-				solParziale.add(c);
+				solParziale.put(c, 0);
 			}
 		}
 	}
 	
-	public List<Cella> trova(){
+	public Map<Cella,Integer> trova(){
 		
-		//solParziale.clear();
-		for(int j=1;j<=9;j++)
-			ricorsione(j);
+		ricorsione(1);
 		
 		
 		return solParziale;
 	}
 	
 	private boolean ricorsione(int livello){
-
-		if(livello==10){
+		
+		if(controlloFine()==81)//da modificare
 			return true;
+		
+		if(livello==10){
+			livello=1;
+			/*for(int i=1;i<=9;i++){
+				for(int j=1;j<=9;j++){
+					System.out.print(solParziale.get(new Cella(i,j))+" ");
+					if(j==9)
+						System.out.print("\n");
+				}
+			}
+			System.out.print("\n");*/
 		}
-		for(int col=1;col<=9;col++){
-			for(int val=1;val<=9;val++){
+		
+		for(int val=1;val<=9;val++){
+			for(int col=1;col<=9;col++){
 				if(filtro(livello,col,solParziale,val)==true){
-					int p=solParziale.indexOf(new Cella(livello,col));
-					solParziale.get(p).setValore(val);
+					solParziale.put(new Cella(livello,col),val);
 					
-					boolean b=ricorsione(livello+1);
-					if(b==true)
-						return true;
 					
-					solParziale.get(p).setValore(0);
+						boolean b=ricorsione(livello+1);
+						if(b==true)
+							return true;
+						
+						solParziale.put(new Cella(livello,col),0);
 				}
 			}
 		}
-		
-		
 		return false;
 	}
 	
 	//MOSTRUOSO
-	private boolean controlloMatrice(int livello,int col,List<Cella> solParziale,int val){
-		//PRIMA "RIGA"
+	private boolean controlloMatrice(int livello,int col,Map<Cella,Integer> solParziale,int val){
+		/*//PRIMA "RIGA"
 		if(livello<=3){
 			//PRIMO QUADRATO
 			if(col<=3){
@@ -170,25 +182,42 @@ public class SudokuProva {
 			
 		}
 		
+		return true;*/
+		int r=livello;
+		int c=col;
+		if(livello==1||livello==4||livello==7)
+			r++;
+		if(livello==3||livello==6||livello==9)
+			r--;
+		if(col==1||col==4||col==7)
+			c++;
+		if(col==3||col==6||col==9)
+			c--;
+		
+		for(int ri=(r-1);ri<=r+1;ri++){
+			for(int co=(c-1);co<=c+1;co++){
+				if(solParziale.get(new Cella(ri,co))==val)
+					return false;				
+			}			
+		}	
 		return true;
+		
 	}
 
 	
 	
-	private boolean filtro(int livello,int col,List<Cella> solParziale,int val){
-		
+	private boolean filtro(int livello,int col,Map<Cella,Integer> solParziale,int val){
+	
 		//CONTROLLO NUMERO GIA' INSERITO
 		
-		int temp=solParziale.indexOf(new Cella(livello,col));
-		if(solParziale.get(temp).getValore()!=0)
+		if(solParziale.get(new Cella(livello,col))!=0)
 			return false;
 		
 		
 		//CONTROLLO RIGA
 		for(int i=1;i<=9;i++){
 			if(i!=col){
-				int p=solParziale.indexOf(new Cella(livello,i));
-				if(solParziale.get(p).getValore()==val){
+				if(solParziale.get(new Cella(livello,i))==val){
 					return false;
 				}
 			}
@@ -197,8 +226,7 @@ public class SudokuProva {
 		//CONTROLLO COLONNA
 		for(int i=1;i<=9;i++){
 			if(i!=livello){
-				int p=solParziale.indexOf(new Cella(i,col));
-				if(solParziale.get(p).getValore()==val){
+				if(solParziale.get(new Cella(i,col))==val){
 					return false;
 				}
 			}
@@ -211,16 +239,29 @@ public class SudokuProva {
 		return true;
 	}
 	
+	private int controlloFine(){
+		int c=0;
+		for(int i=1;i<=9;i++){
+			for(int j=1;j<=9;j++){
+				if(solParziale.get(new Cella(i,j))!=0)
+					c++;
+			}
+		}
+		return c;
+	}
 	
 	
 	public static void main(String[] args) {
 		SudokuProva sp=new SudokuProva();
-		List<Cella> l=sp.trova();
+		Map<Cella,Integer> l=sp.trova();
 		
-		for(int i=0;i<81;i++){
-			if(i==9 || i==18 || i==27 || i==36 || i==45 || i==54 || i==63 || i==72)
-				System.out.print("\n");
-			System.out.print(l.get(i)+" ");
+		
+		for(int i=1;i<=9;i++){
+			for(int j=1;j<=9;j++){
+				System.out.print(l.get(new Cella(i,j))+" ");
+				if(j==9)
+					System.out.print("\n");
+			}
 		}
 		
 		

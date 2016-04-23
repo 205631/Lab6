@@ -4,21 +4,21 @@ public class Cella {
 
 	private int riga;
 	private int col;
-	private int valore;
+	//private int valore;
 	
 	public Cella(int riga, int col) {
 		super();
 		this.riga = riga;
 		this.col = col;
-		valore=0;
+		//valore=0;
 	}
 	
-	public Cella(int riga, int col,int valore) {
+	/*public Cella(int riga, int col,int valore) {
 		super();
 		this.riga = riga;
 		this.col = col;
-		this.valore=valore;
-	}
+		//this.valore=valore;
+	}*/
 
 	public int getRiga() {
 		return riga;
@@ -37,13 +37,13 @@ public class Cella {
 	}
 	
 
-	public int getValore() {
+	/*public int getValore() {
 		return valore;
 	}
 
 	public void setValore(int valore) {
 		this.valore = valore;
-	}
+	}*/
 
 	@Override
 	public int hashCode() {
@@ -70,9 +70,9 @@ public class Cella {
 		return true;
 	}
 	
-	public String toString(){
-		return /*riga+"-"+col+":"+*/valore+"";
-	}
+	/*public String toString(){
+		return /*riga+"-"+col+":"+valore+"";
+	}*/
 	
 	
 	
